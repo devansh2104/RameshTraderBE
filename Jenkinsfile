@@ -15,16 +15,19 @@ pipeline {
     
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
-                script {
-                    env.GIT_COMMIT_SHORT = sh(
-                        script: 'git rev-parse --short HEAD',
-                        returnStdout: true
-                    ).trim()
-                }
-            }
+    steps {
+        checkout([$class: 'GitSCM',
+            branches: [[name: "*/main"]],
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [[$class: 'CloneOption', depth: 0, noTags: false, shallow: false]],
+            userRemoteConfigs: [[url: 'https://github.com/devansh2104/RameshTraderBE.git']]
+        ])
+        script {
+            env.GIT_COMMIT_SHORT = "${env.GIT_COMMIT.take(7)}"
         }
+    }
+}
+
         
         stage('Install Dependencies') {
             steps {
@@ -148,5 +151,6 @@ pipeline {
         }
     }
 }
+
 
 
