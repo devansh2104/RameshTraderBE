@@ -1,6 +1,10 @@
 pipeline {
-    agent any
-    
+    agent {
+        docker {
+            image "node:18"
+            args '-u root' // optional: run as root inside container
+        }
+    }
     environment {
         NODE_VERSION = '18'
         DOCKER_REGISTRY = 'your-registry.com'
@@ -144,4 +148,5 @@ pipeline {
         }
     }
 }
+
 
